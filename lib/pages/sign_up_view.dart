@@ -167,7 +167,7 @@ class _SignUpViewState extends State<SignUpView> {
       _headerText = "Reset Password";
     } else  {
       _headerText = "Create New Account";
-    };
+    }
     return AutoSizeText(
       _headerText,
       maxLines: 1,
