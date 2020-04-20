@@ -51,6 +51,18 @@ class AuthService {
     return _firebaseAuth.signOut();
   }
 
+  getUsername() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    String name = user.displayName.toString();
+    return name;
+  }
+
+  getUserEmail() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    String email = user.email.toString();
+    return email;
+  }
+
   // reset password
   Future sendPasswordResetEmail(String email) async {
     return _firebaseAuth.sendPasswordResetEmail(email: email);
