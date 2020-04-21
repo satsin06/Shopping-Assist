@@ -3,8 +3,7 @@ import 'package:shopping_assist/services/authentication.dart';
 import 'package:shopping_assist/widgets/provider_widget.dart';
 
 class HomePage extends StatefulWidget {
-  // TODO
-
+  
   final AuthService auth;
   HomePage({
     Key key,
@@ -39,37 +38,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                  margin: EdgeInsets.only(
-                      right: 10.0, bottom: 1.0, top: 1.0, left: 3.0),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Search here", style: TextStyle(fontSize: 16.0, color: Colors.black)),
-                      ),
-                      SizedBox(width: 185.0,),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Container(
-                          alignment: Alignment.centerRight,
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )
-                    ],
-                  ))
-            ],
+          IconButton(
+            icon: Icon(Icons.search),
+            color: Colors.white,
+            onPressed: () {
+              showSearch(context: context, delegate: SearchBar());
+            },
           )
         ],
       ),
@@ -230,6 +204,135 @@ Widget displayinfo(context, snapshot) {
           ),
         )
       ],
+    );
+  }
+}
+
+class SearchBar extends SearchDelegate<String> {
+  final items = [
+    "Milk",
+    "Cheese",
+    "Paneer",
+    "Curd",
+    "Biscuits",
+    "Lays",
+    "Kurkure",
+    "Frooti",
+    "Coca Cola",
+    "Fanta",
+    "Pepsi",
+    "ThumsUp",
+    "Wheat Flour",
+    "Maze Flour",
+    "Lentils",
+    "Beans",
+    "Corn",
+    "Chocolates",
+    "Cereal",
+    "Oats",
+    "Tea",
+    "Coffee",
+    "Namkeen",
+    "Utensils",
+    "Culinery",
+    "Deodorants",
+    "Perfumes",
+    "Soaps",
+    "Shampoos",
+    "Hair Conditioner",
+    "Handwash",
+    "Detergents",
+    "Liquid Soap",
+    "Ghee",
+    "Refined Oil",
+    "Olive Oil"
+  ];
+
+  final recentItems = [
+    "Corn",
+    "Chocolates",
+    "Cereal",
+    "Oats",
+    "Tea",
+    "Coffee",
+  ];
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Center(
+      child: Card(
+        color: Colors.white24,
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.deepOrange, Colors.orangeAccent],
+                tileMode: TileMode.mirror),
+          ),
+          child: Text(query),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? recentItems
+        : items
+            .where((p) => p.toLowerCase().contains(query.toLowerCase()))
+            .toList(); // displays items which contain the query string
+    //: items.where((p) => p.toLowerCase().startsWith(query.toLowerCase())).toList();         // displays items which start with the query string
+
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        onTap: (){
+          query = suggestionList[index];
+          showResults(context,);
+        },
+        leading: Icon(Icons.shopping_cart),
+        title: RichText(
+          text: TextSpan(
+              text: suggestionList[index].substring(0, query.length),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              children: [
+                TextSpan(
+                    text: suggestionList[index].substring(query.length),
+                    style: TextStyle(color: Colors.grey))
+              ]),
+        ),
+      ),
+      itemCount: suggestionList.length,
     );
   }
 }
