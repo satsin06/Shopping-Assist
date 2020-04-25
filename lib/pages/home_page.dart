@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_assist/pages/show_cart.dart';
+import 'package:shopping_assist/pages/show_categories.dart';
+import 'package:shopping_assist/pages/show_offers.dart';
 import 'package:shopping_assist/services/authentication.dart';
 import 'package:shopping_assist/widgets/provider_widget.dart';
 
 class HomePage extends StatefulWidget {
-  
   final AuthService auth;
   HomePage({
     Key key,
@@ -18,6 +20,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AuthService auth;
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    ShowOffers(),
+    ShowCategories()
+  ];
 
   @override
   void didChangeDependencies() {
@@ -37,6 +44,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Shopping Assist"),
+        backgroundColor: Colors.green[575],
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+        elevation: 7.0,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -51,15 +63,20 @@ class _HomePageState extends State<HomePage> {
         elevation: 7.0,
         child: Column(
           children: <Widget>[
-            DrawerHeader(
-              child: DisplayInfo(),
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.green.shade900, Colors.green])),
+            Container(
+              height: 400.0,
+              child: DrawerHeader(
+                child: DisplayInfo(),
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.lightGreen, Colors.green])),
+              ),
             ),
             InkWell(
-              splashColor: Colors.greenAccent,
-              onTap: () {},
+              splashColor: Colors.lightGreen,
+              onTap: () {
+                Navigator.of(context).pushNamed('/home');
+              },
               child: ListTile(
                 title: Text("Home",
                     style: TextStyle(
@@ -69,8 +86,12 @@ class _HomePageState extends State<HomePage> {
                 leading: Icon(Icons.home),
               ),
             ),
+            Divider(
+              height: 5.0,
+              thickness: 2.0,
+            ),
             InkWell(
-              splashColor: Colors.greenAccent,
+              splashColor: Colors.lightGreen,
               onTap: () {},
               child: ListTile(
                 title: Text(
@@ -80,8 +101,12 @@ class _HomePageState extends State<HomePage> {
                 leading: Icon(Icons.person),
               ),
             ),
+            Divider(
+              height: 5.0,
+              thickness: 2.0,
+            ),
             InkWell(
-              splashColor: Colors.greenAccent,
+              splashColor: Colors.lightGreen,
               onTap: () {},
               child: ListTile(
                 title: Text(
@@ -96,7 +121,7 @@ class _HomePageState extends State<HomePage> {
               thickness: 2.0,
             ),
             InkWell(
-              splashColor: Colors.greenAccent,
+              splashColor: Colors.lightGreen,
               onTap: () {
                 try {
                   auth.signOut();
@@ -115,12 +140,40 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: Center(
-          child: Text(
-        "Hey There",
-        textScaleFactor: 2.0,
-      )),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.local_grocery_store,
+          size: 30.0,
+        ),
+        onPressed: (){},
+        tooltip: "Show Cart",
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.shifting,
+          elevation: 15.0,
+          selectedItemColor: Colors.green,
+          unselectedItemColor: Colors.black26,
+          onTap: onTabTapped,
+          currentIndex: _currentIndex,
+          items: [
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.local_offer),
+              title: new Text("Offers"),
+            ),
+            BottomNavigationBarItem(
+              icon: new Icon(Icons.category),
+              title: new Text("Categories"),
+            ),
+          ]),
     );
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }
 
@@ -130,6 +183,7 @@ class DisplayInfo extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           FutureBuilder(
             future: Provider.of(context).auth.getCurrentUser(),
@@ -153,10 +207,10 @@ Widget displayinfo(context, snapshot) {
     return Column(
       children: <Widget>[
         CircleAvatar(
-          maxRadius: 35.0,
+          maxRadius: 45.0,
           child: Icon(
             Icons.person,
-            size: 35.0,
+            size: 45.0,
           ),
           backgroundColor: Colors.indigo,
         ),
@@ -183,24 +237,24 @@ Widget displayinfo(context, snapshot) {
     return Column(
       children: <Widget>[
         CircleAvatar(
-          maxRadius: 35.0,
+          maxRadius: 45.0,
           backgroundImage: NetworkImage(user.photoUrl),
         ),
         SizedBox(
           height: 10.0,
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 2.0),
+          padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
           child: Text(
             "${user.displayName}",
-            style: TextStyle(fontSize: 15.0, color: Colors.white),
+            style: TextStyle(fontSize: 18.0, color: Colors.white),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 5.0),
+          padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
           child: Text(
             "${user.email}",
-            style: TextStyle(fontSize: 13.0, color: Colors.white),
+            style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
         )
       ],
@@ -284,22 +338,60 @@ class SearchBar extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center(
-      child: Card(
-        color: Colors.white24,
-        child: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.deepOrange, Colors.orangeAccent],
-                tileMode: TileMode.mirror),
+    return Container(
+      alignment: Alignment.topCenter,
+      padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.lightGreen, Colors.green],
+            tileMode: TileMode.clamp),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 400.0,
+            width: 400.0,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.0),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black38,
+                      spreadRadius: 0.0,
+                      blurRadius: 10.0,
+                      offset: Offset(0.0, 5.0))
+                ]),
+            child: Center(
+                child: Text(
+              query,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35.0),
+            )),
           ),
-          child: Text(query),
-        ),
+          SizedBox(
+            height: 40.0,
+          ),
+          Container(
+            height: 100.0,
+            width: 400.0,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.0),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black38,
+                      spreadRadius: 0.0,
+                      blurRadius: 10.0,
+                      offset: Offset(0.0, 5.0))
+                ]),
+            child: Center(
+                child: Text(
+              query,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35.0),
+            )),
+          ),
+        ],
       ),
     );
   }
@@ -315,11 +407,13 @@ class SearchBar extends SearchDelegate<String> {
 
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
-        onTap: (){
+        onTap: () {
           query = suggestionList[index];
-          showResults(context,);
+          showResults(
+            context,
+          );
         },
-        leading: Icon(Icons.shopping_cart),
+        leading: Icon(Icons.shopping_basket),
         title: RichText(
           text: TextSpan(
               text: suggestionList[index].substring(0, query.length),

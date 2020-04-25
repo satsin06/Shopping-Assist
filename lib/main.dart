@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_assist/pages/first_view.dart';
 import 'package:shopping_assist/pages/home_page.dart';
+import 'package:shopping_assist/pages/show_cart.dart';
 import 'package:shopping_assist/widgets/provider_widget.dart';
 import 'services/authentication.dart';
 import 'package:shopping_assist/pages/sign_up_view.dart';
@@ -21,6 +22,7 @@ class ShoppingAssist extends StatelessWidget {
         home: HomeController(),
         routes: <String, WidgetBuilder>{
           '/home': (BuildContext context) => HomeController(),
+          //'/showcart': (BuildContext context) => ShowCart(),
           '/signUp': (BuildContext context) => SignUpView(authFormType: AuthFormType.signUp),
           '/signIn': (BuildContext context) => SignUpView(authFormType: AuthFormType.signIn),
         },
