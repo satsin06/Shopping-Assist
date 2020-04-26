@@ -1,4 +1,7 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 import 'package:shopping_assist/pages/show_cart.dart';
 import 'package:shopping_assist/pages/show_categories.dart';
 import 'package:shopping_assist/pages/show_offers.dart';
@@ -21,10 +24,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   AuthService auth;
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    ShowOffers(),
-    ShowCategories()
-  ];
+  final List<Widget> _children = [ShowOffers(),ShowCategories(),];
 
   @override
   void didChangeDependencies() {
@@ -45,9 +45,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Shopping Assist"),
-        backgroundColor: Colors.green[575],
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+        backgroundColor: Colors.green,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(25.0),
+                bottomRight: Radius.circular(25.0))),
         elevation: 7.0,
         actions: <Widget>[
           IconButton(
@@ -59,12 +61,13 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
+      drawerEdgeDragWidth: 100.0,
       drawer: Drawer(
         elevation: 7.0,
         child: Column(
           children: <Widget>[
             Container(
-              height: 400.0,
+              height: MediaQuery.of(context).size.height * 0.49,
               child: DrawerHeader(
                 child: DisplayInfo(),
                 decoration: BoxDecoration(
@@ -141,32 +144,54 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.local_grocery_store,
-          size: 30.0,
+        child: Badge(
+          badgeContent: Text(
+            '5',
+            style: TextStyle(color: Colors.white),
+          ),
+          position: BadgePosition(left: 20.0, bottom: 20.0),
+          child: Icon(
+            Icons.local_grocery_store,
+            size: 30.0,
+          ),
         ),
-        onPressed: (){},
+        onPressed: () {
+          Navigator.of(context).pushNamed('/showcart');
+        },
         tooltip: "Show Cart",
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      //floatingActionButtonAnimator: ,
       body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.shifting,
-          elevation: 15.0,
-          selectedItemColor: Colors.green,
-          unselectedItemColor: Colors.black26,
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.local_offer),
-              title: new Text("Offers"),
-            ),
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.category),
-              title: new Text("Categories"),
-            ),
-          ]),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: 0,
+        height: 50.0,
+        buttonBackgroundColor: Colors.green,
+        backgroundColor: Colors.white,
+        color: Colors.green,
+        items: <Widget>[
+          Icon(Icons.local_offer),
+          Icon(Icons.category),
+        ],
+        onTap: onTabTapped,
+      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //     type: BottomNavigationBarType.shifting,
+      //     elevation: 15.0,
+      //     selectedItemColor: Colors.red,
+      //     unselectedItemColor: Colors.black45,
+      //     onTap: onTabTapped,
+      //     currentIndex: _currentIndex,
+      //     items: [
+      //       BottomNavigationBarItem(
+      //           icon: Icon(Icons.local_offer),
+      //           title: Text("Offers"),
+      //           backgroundColor: Colors.white),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.category),
+      //         title: Text("Categories"),
+      //       ),
+      //     ]),
     );
   }
 

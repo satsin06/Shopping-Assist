@@ -22,7 +22,7 @@ class ShoppingAssist extends StatelessWidget {
         home: HomeController(),
         routes: <String, WidgetBuilder>{
           '/home': (BuildContext context) => HomeController(),
-          //'/showcart': (BuildContext context) => ShowCart(),
+          '/showcart': (BuildContext context) => ShowCart(),
           '/signUp': (BuildContext context) => SignUpView(authFormType: AuthFormType.signUp),
           '/signIn': (BuildContext context) => SignUpView(authFormType: AuthFormType.signIn),
         },
