@@ -13,7 +13,7 @@ class ShowCart extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Colors.green[575],
+        backgroundColor: Colors.green,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(25.0),

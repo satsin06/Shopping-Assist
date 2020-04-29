@@ -36,6 +36,7 @@ dev_dependencies:
   flutter_spinkit: 
   google_fonts:
   badges: ^1.1.1
+  cached_network_image:
   
 
 
