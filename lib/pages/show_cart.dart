@@ -1,6 +1,71 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:shopping_assist/models/orders.dart';
+//import 'package:shopping_assist/models/products.dart';
+//import 'package:shopping_assist/pages/show_categories.dart';
+import 'package:shopping_assist/services/authentication.dart';
 
-class ShowCart extends StatelessWidget {
+class ShowCart extends StatefulWidget {
+  final AuthService auth;
+  ShowCart({
+    Key key,
+    this.auth,
+  }) : super(key: key);
+  @override
+  _ShowCartState createState() => _ShowCartState(auth: this.auth);
+}
+
+class _ShowCartState extends State<ShowCart> {
+  AuthService auth;
+
+  //final FirebaseDatabase _database = FirebaseDatabase.instance;
+  List<Orders> _ordersList;
+
+  // StreamSubscription<Event> _onOrdersChanged;
+  // StreamSubscription<Event> _onOrdersAdded;
+  // Query _ordersQuery;
+
+  @override
+  void initState() {
+    super.initState();
+    // _ordersList = List();
+    // _ordersQuery = _database
+    //     .reference()
+    //     .child("orders")
+    //     .orderByChild("userId")
+    //     .equalTo(auth.getCurrentUID());
+
+    // _onOrdersAdded = _ordersQuery.onChildAdded.listen(onEntryAdded);
+    // _onOrdersChanged = _ordersQuery.onChildChanged.listen(onEntryChanged);
+  }
+
+  @override
+  void dispose() {
+    // _onOrdersAdded.cancel();
+    // _onOrdersChanged.cancel();
+    super.dispose();
+  }
+
+  _ShowCartState({this.auth});
+
+  onEntryChanged(Event event) {
+    var oldEntry = _ordersList.singleWhere((entry) {
+      return entry.key == event.snapshot.key;
+    });
+
+    setState(() {
+      _ordersList[_ordersList.indexOf(oldEntry)] =
+          Orders.fromSnapshot(event.snapshot);
+    });
+  }
+
+  onEntryAdded(Event event) {
+    setState(() {
+      _ordersList.add(Orders.fromSnapshot(event.snapshot));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +96,7 @@ class ShowCart extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         icon: Icon(Icons.check),
         label: Text('Checkout'),
-        onPressed: (){},
+        onPressed: () {},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
