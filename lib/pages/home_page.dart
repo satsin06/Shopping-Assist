@@ -4,11 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart';
 import 'package:shopping_assist/models/products.dart';
 import 'package:shopping_assist/pages/show_categories.dart';
 import 'package:shopping_assist/pages/show_offers.dart';
 import 'package:shopping_assist/services/authentication.dart';
+import 'package:shopping_assist/widgets/fabcart.dart';
+import 'package:shopping_assist/widgets/profileview.dart';
 import 'package:shopping_assist/widgets/provider_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,8 +29,11 @@ class _HomePageState extends State<HomePage> {
   AuthService auth;
   var url = "https://aakash3101.github.io/productDB/groceriesdb.json";
   int _currentIndex = 0;
+  
   List<String> itemNames;
+  
   List<Products> itemList;
+  
   final List<Widget> _children = [
     ShowOffers(),
     ShowCategories(),
@@ -63,7 +67,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 
@@ -127,7 +131,12 @@ class _HomePageState extends State<HomePage> {
             ),
             InkWell(
               splashColor: Colors.lightGreen,
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ProfileView()));
+                });
+              },
               child: ListTile(
                 title: Text(
                   'Profile',
@@ -145,10 +154,10 @@ class _HomePageState extends State<HomePage> {
               onTap: () {},
               child: ListTile(
                 title: Text(
-                  'Settings',
+                  'My Orders',
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
-                leading: Icon(Icons.settings),
+                leading: Icon(Icons.local_mall),
               ),
             ),
             Divider(
@@ -175,27 +184,13 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Badge(
-          badgeColor: Colors.amber,
-          badgeContent: Text(
-            '5',
-            style: TextStyle(color: Colors.black),
-          ),
-          position: BadgePosition(left: 20.0, bottom: 20.0),
-          child: Icon(
-            Icons.local_grocery_store,
-            size: 30.0,
-          ),
-        ),
-        onPressed: () {
-          Navigator.of(context).pushNamed('/showcart');
-        },
-        tooltip: "Show Cart",
-      ),
+      floatingActionButton: fabCart(context, 3),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       //floatingActionButtonAnimator: ,
-      body: _children[_currentIndex],
+      body: IndexedStack(
+        children: _children,
+        index: _currentIndex,
+      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(top: 7.0),
         child: CurvedNavigationBar(
@@ -208,15 +203,16 @@ class _HomePageState extends State<HomePage> {
             Icon(Icons.local_offer),
             Icon(Icons.category),
           ],
-          onTap: onTabTapped,
+          onTap: onTabtapped
         ),
       ),
     );
   }
 
-  void onTabTapped(int index) {
+  void onTabtapped (int index) {
     setState(() {
       _currentIndex = index;
+      //_pageController.jumpToPage(index);
     });
   }
 }
@@ -361,10 +357,12 @@ class SearchBar extends SearchDelegate<String> {
             tileMode: TileMode.clamp),
       ),
       child: SingleChildScrollView(
-        padding: EdgeInsets.only(top:10.0, bottom: 15.0),
+        padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
         child: Column(
           children: <Widget>[
-            SizedBox(height: 10.0,),
+            SizedBox(
+              height: 10.0,
+            ),
             Container(
               height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width * 0.9,
@@ -388,11 +386,13 @@ class SearchBar extends SearchDelegate<String> {
                       width: MediaQuery.of(context).size.width * 0.47,
                     ),
                   ),
-                  SizedBox(height: 10.0,),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   Text(
                     item.name,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 27.0),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 27.0),
                   ),
                 ],
               ),
@@ -416,8 +416,7 @@ class SearchBar extends SearchDelegate<String> {
               child: Center(
                   child: Text(
                 query,
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 35.0),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35.0),
               )),
             ),
           ],
@@ -461,6 +460,25 @@ class SearchBar extends SearchDelegate<String> {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// PageView(
+//       controller: _pageController,
+//       children: <Widget>[ShowOffers(), ShowCategories()],
+//       onPageChanged: onTabtapped
+//     )
 //Bottom Navigation Bar
 // bottomNavigationBar: BottomNavigationBar(
 //     type: BottomNavigationBarType.shifting,
