@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'provider_widget.dart';
+import 'package:shopping_assist/widgets/provider_widget.dart';
 
 class ProfileView extends StatelessWidget {
   @override

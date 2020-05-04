@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopping_assist/widgets/show_products.dart';
+import 'package:shopping_assist/display_widgets/show_products.dart';
 
 class ShowCategories extends StatelessWidget {
   @override

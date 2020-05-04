@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:shopping_assist/widgets/custom_dialog.dart';
+import 'package:shopping_assist/display_widgets/custom_dialog.dart';
 
 class FirstView extends StatelessWidget {
   
