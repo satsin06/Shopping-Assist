@@ -112,7 +112,8 @@ class _HomePageState extends State<HomePage> {
             InkWell(
               splashColor: Colors.lightGreen,
               onTap: () {
-                Navigator.of(context).pushNamed('/home');
+                Navigator.pop(context);
+                //Navigator.of(context).pushNamed('/home');
               },
               child: ListTile(
                 title: Text("Home",
