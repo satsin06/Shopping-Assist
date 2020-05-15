@@ -22,7 +22,7 @@ class _ShowProductState extends State<ShowProduct> {
   Product product;
   List<Products> items;
   List<Products> typeItems;
-  List count;
+  List count= [];
   
 
   @override
@@ -43,7 +43,6 @@ class _ShowProductState extends State<ShowProduct> {
       count = List.filled(typeItems.length, 0);
     });
   }
-
 
 
   _ShowProductState({this.appBartitle, this.type});
@@ -77,10 +76,10 @@ class _ShowProductState extends State<ShowProduct> {
                     crossAxisCount: 2,
                     childAspectRatio: 9 / 16,
                     mainAxisSpacing: 3.0,
-                    crossAxisSpacing: 3.0),
+                    crossAxisSpacing: 2.0),
                 itemBuilder: (BuildContext context, int index) {
                   return Padding(
-                    padding: EdgeInsets.all(2.0),
+                    padding: EdgeInsets.all(3.0),
                     child: InkWell(
                       onTap: () {},
                       child: Card(
@@ -92,6 +91,7 @@ class _ShowProductState extends State<ShowProduct> {
                           child: Container(
                             //MediaQuery.of(context).size.width * 0.2,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 CachedNetworkImage(
                                   imageUrl: typeItems[index].image,
@@ -103,11 +103,11 @@ class _ShowProductState extends State<ShowProduct> {
                                 Text(
                                   typeItems[index].name,
                                   style: TextStyle(
-                                      fontSize: 18.0,
+                                      fontSize: 16.0,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
-                                  height: 7.0,
+                                  height: 10.0,
                                 ),
                                 Text(
                                   "Price: Rs ${typeItems[index].price}",
@@ -121,7 +121,7 @@ class _ShowProductState extends State<ShowProduct> {
                                 ),
                                 Container(
                                   padding: const EdgeInsets.only(
-                                      top: 8.0, bottom: 8.0),
+                                      top: 5.0, bottom: 10.0),
                                   child: count[index] == 0
                                       ? SizedBox(
                                           height: 48.0,
